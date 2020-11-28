@@ -3,6 +3,7 @@ package com.example.movierecord.domain;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -12,7 +13,7 @@ import java.util.List;
 
 
 @Repository
-public interface MovieRepository extends JpaRepository<Movie, Long> {
+public interface MovieRepository extends JpaRepository<Movie, Long>, JpaSpecificationExecutor<Movie> {
 
     Page<Movie> findAll(Pageable pageable);
 
@@ -46,7 +47,5 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     @Query("update Movie m set m.minutes = ?2 where m.id= ?1")
     int updateMinutesById(long id, int minutes);
 
-    @Query("select m from Movie m where m.title like ?1 and m.country like ?2 and m.genre like ?3 and m.director like ?4")
-    Page<Movie> search(String title, String country, String genre, String director, Pageable pageable);
 
 }

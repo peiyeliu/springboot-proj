@@ -37,13 +37,14 @@ public class MoviesController {
 
     /**
      * listed all movie records saved
+     *
      * @param pageable
      * @param model
      * @return
      */
     @GetMapping("/movies")
-    public String listAll(@PageableDefault(size = 20, sort={"id"}, direction = Sort.Direction.ASC) Pageable pageable,
-                          Model model){
+    public String listAll(@PageableDefault(size = 20, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable,
+                          Model model) {
         Page<Movie> page1 = movieService.showAllMoviesByPage(pageable);
         model.addAttribute("page", page1);
         return "movies";
@@ -52,14 +53,15 @@ public class MoviesController {
 
     /**
      * get one movie record
+     *
      * @param id
      * @param model
      * @return
      */
     @GetMapping("/movies/{id}")
-    public String getMovieInfo(@PathVariable long id, Model model){
+    public String getMovieInfo(@PathVariable long id, Model model) {
         Movie movie = movieService.showMovieById(id);
-        if(movie == null){
+        if (movie == null) {
             movie = new Movie();
         }
         model.addAttribute("movie", movie);
@@ -68,23 +70,25 @@ public class MoviesController {
 
     /**
      * get the movie record input page
+     *
      * @param model
      * @return
      */
     @GetMapping("/movies/input")
-    public String inputPage(Model model){
+    public String inputPage(Model model) {
         model.addAttribute("movie", new Movie());
         return "input";
     }
 
     /**
      * edit one movie record
+     *
      * @param id
      * @param model
      * @return
      */
     @GetMapping("/movies/{id}/input")
-    public String editMovie(@PathVariable long id, Model model){
+    public String editMovie(@PathVariable long id, Model model) {
         Movie movie = movieService.showMovieById(id);
         model.addAttribute("movie", movie);
         return "input";
@@ -92,14 +96,15 @@ public class MoviesController {
 
     /**
      * post one movie record
+     *
      * @param movie
      * @param attributes
      * @return
      */
     @PostMapping("/movies")
-    public String post(Movie movie, final RedirectAttributes attributes){
+    public String post(Movie movie, final RedirectAttributes attributes) {
         Movie movieSaved = movieService.saveMovie(movie);
-        if(movieSaved != null){
+        if (movieSaved != null) {
             attributes.addFlashAttribute("message", "Update Success");
         }
         return "redirect:/movies";
@@ -108,13 +113,14 @@ public class MoviesController {
 
     /**
      * remove one movie record
+     *
      * @param id
      * @param attributes
      * @return
      */
     @GetMapping("/movies/{id}/delete")
     public String deleteMovie(@PathVariable long id,
-                              final RedirectAttributes attributes){
+                              final RedirectAttributes attributes) {
         movieService.deleteMovieById(id);
         attributes.addFlashAttribute("message", "Delete Success");
         return "redirect:/movies";
@@ -122,38 +128,46 @@ public class MoviesController {
 
     /**
      * get the search page
+     *
      * @param model
      * @return
      */
     @GetMapping("/search")
-    public String searchPage(Model model){
+    public String searchPage(Model model) {
         model.addAttribute("searchForm", new MovieSearchForm());
         return "search";
     }
 
     /**
      * perform the searching
+     *
      * @param form
      * @param pageable
      * @param model
      * @return
      */
     @PostMapping("/search")
-    public String listAllMovies(@Valid MovieSearchForm form, Pageable pageable, Model model){
-        Page<Movie> movies = movieService.searchBy(form, pageable);
-        model.addAttribute("page", movies);
-        return "movies";
+    public String listMoviesBySearch(MovieSearchForm form, Pageable pageable, Model model) {
+        String title = form.getTitle();
+        String country = form.getCountry();
+        String genre = form.getGenre();
+        String director = form.getDirector();
+
+        Page<Movie> page = movieService.queryBy(title, country, genre, director, pageable);
+        model.addAttribute("page", page);
+        return "searchresult";
     }
 
     /**
      * get all rating records for that movie
+     *
      * @param id
      * @param pageable
      * @param model
      * @return
      */
     @GetMapping("movies/{id}/ratings")
-    public String getRatings(@PathVariable long id, Pageable pageable, Model model){
+    public String getRatings(@PathVariable long id, Pageable pageable, Model model) {
         Page<Rating> ratingList = ratingService.showAllRatingsByPage(id, pageable);
         model.addAttribute("page", ratingList);
         return "ratings";
@@ -161,12 +175,13 @@ public class MoviesController {
 
     /**
      * get the rating input page
+     *
      * @param id
      * @param model
      * @return
      */
     @GetMapping("/movies/{id}/ratingInput")
-    public String ratingInputPage(@PathVariable long id, Model model){
+    public String ratingInputPage(@PathVariable long id, Model model) {
         Rating rating = new Rating();
         rating.setMovie(movieService.showMovieById(id));
         model.addAttribute("rating", rating);
@@ -175,11 +190,12 @@ public class MoviesController {
 
     /**
      * post one rating record
+     *
      * @param rating
      * @return
      */
     @PostMapping("movies/{id}/ratings")
-    public String postRating(Rating rating){
+    public String postRating(Rating rating) {
         Rating ratingSaved = ratingService.saveRating(rating);
         return "redirect:/movies/{id}/ratings";
     }

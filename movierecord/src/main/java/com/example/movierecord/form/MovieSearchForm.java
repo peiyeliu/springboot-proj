@@ -1,16 +1,11 @@
 package com.example.movierecord.form;
 
-import javax.validation.constraints.NotNull;
 
 public class MovieSearchForm {
 
-    @NotNull
     private String title;
-    @NotNull
     private String country;
-    @NotNull
     private String genre;
-    @NotNull
     private String director;
 
     public MovieSearchForm() {

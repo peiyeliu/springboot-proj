@@ -11,9 +11,15 @@ import java.util.List;
 @Service
 public interface MovieService {
     Page<Movie> showAllMoviesByPage(Pageable pageable);
+
     Movie showMovieById(long id);
+
     Movie saveMovie(Movie movie);
+
     void deleteMovieById(long id);
+
     void deleteAll();
-    Page<Movie> searchBy(MovieSearchForm form, Pageable pageable);
+
+    Page<Movie> queryBy(String title, String country, String genre, String director,
+                        Pageable pageable);
 }

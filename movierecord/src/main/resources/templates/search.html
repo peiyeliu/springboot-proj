@@ -29,11 +29,11 @@
                 <label for="directorId">Director</label>
                 <input type="text" name="director" id="directorId" class="form-control" th:field="*{director}">
             </div>
+            <div>
+                <input type="submit" name="Submit">
+            </div>
             <p class="container">
                 <button type="button" class="btn btn-default" onclick="history.go(-1)">Return</button>
-                <a href="/movies" th:href="@{/movies}" class="btn btn-primary">
-                    submit
-                </a>
             </p>
         </form>
     </div>
